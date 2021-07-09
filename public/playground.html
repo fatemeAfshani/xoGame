@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./css/style.css" />
+
+    <title>playground</title>
+  </head>
+  <body>
+    <h1>playground</h1>
+    <p id="error-message"></p>
+    <div id="board-data"></div>
+    <ul id="messages"></ul>
+    <p id="game-message"></p>
+    <form id="messageForm">
+      <p></p>
+      <input
+        type="text"
+        name="msgInput"
+        placeholder="message"
+        required
+        autocomplete="off"
+      />
+      <button type="submit">send message</button>
+    </form>
+    <div id="game-status"></div>
+
+    <div class="board" id="board">
+      <div class="cell" data-cell data-index="0"></div>
+      <div class="cell" data-cell data-index="1"></div>
+      <div class="cell" data-cell data-index="2"></div>
+      <div class="cell" data-cell data-index="3"></div>
+      <div class="cell" data-cell data-index="4"></div>
+      <div class="cell" data-cell data-index="5"></div>
+      <div class="cell" data-cell data-index="6"></div>
+      <div class="cell" data-cell data-index="7"></div>
+      <div class="cell" data-cell data-index="8"></div>
+    </div>
+
+    <script id="board-data-template" type="text/html">
+      <div class="board-data">
+        <p>game</p>
+        <div class="part">
+          <p>user1: {{user1NickName}}</p>
+          <p>user1 avatar: {{user1Avatar}}</p>
+        </div>
+        <div class="part">
+          <p>gem {{gem}}</p>
+          <p>rounds: {{rounds}}</p>
+          <p>draws: {{draws}}</p>
+          <p>{{user1NickName}} win count {{user1Wins}}</p>
+          <p>{{user2NickName}} win count {{user2Wins}}</p>
+        </div>
+        <div class="part">
+          <p>user2: {{user2NickName}}</p>
+          <p>user2 avatar: {{user2Avatar}}</p>
+        </div>
+      </div>
+    </script>
+
+    <script id="message-template" type="text/html">
+      <li class="message">
+        <span class="message__name">{{nickName}}</span>
+        <span class="message__meta">{{createdAt}}</span>
+        <p>{{msg}}</p>
+      </li>
+    </script>
+
+    <script id="message-history-template" type="text/html">
+      <!-- this is a specific syntax for refering an array between this two tags we say what we want to do with array items -->
+      {{#messages}}
+
+      <li class="message">
+        <span class="message__name">{{nickName}}</span>
+        <span class="message__meta">{{createdAt}}</span>
+        <p>{{text}}</p>
+      </li>
+      {{/messages}}
+    </script>
+    <script id="game-status-template" type="text/html">
+      <p>{{status}}</p>
+      <button id="continue-game">ادامه بازی</button>
+      <button id="finish-game">اتمام بازی</button>
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.6.0/qs.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.22.2/moment.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="./js/playground.js"></script>
+  </body>
+</html>

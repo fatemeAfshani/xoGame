@@ -18,6 +18,7 @@ const userSchema = mongoose.Schema(
     },
     avatar: {
       type: String,
+      default: "hi",
     },
     credit: { type: Number, default: 300 },
     isAdmin: {

@@ -1,0 +1,111 @@
+:root {
+  --size: 100px;
+  --markSize: calc(100px * 0.9);
+}
+
+.board {
+  width: 500px;
+  height: 500px;
+  display: grid;
+  justify-content: center;
+  align-content: center;
+  justify-items: center;
+  align-items: center;
+  grid-template-columns: repeat(3, auto);
+}
+
+.cell {
+  width: var(--size);
+  height: var(--size);
+  border: 1px solid black;
+  cursor: pointer;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.cell:first-child,
+.cell:nth-child(2),
+.cell:nth-child(3) {
+  border-top: none;
+}
+
+.cell:first-child,
+.cell:nth-child(4),
+.cell:nth-child(7) {
+  border-left: none;
+}
+
+.cell:nth-child(3),
+.cell:nth-child(6),
+.cell:nth-child(9) {
+  border-right: none;
+}
+
+.cell:nth-child(7),
+.cell:nth-child(8),
+.cell:nth-child(9) {
+  border-bottom: none;
+}
+
+.cell.x,
+.cell.o {
+  cursor: not-allowed;
+}
+
+.cell.x::after,
+.cell.x::before,
+.cell.o::before {
+  background-color: black;
+}
+
+.board.x .cell:not(.o):not(.x):hover::before,
+.board.x .cell:not(.o):not(.x):hover::after {
+  background-color: lightgray;
+}
+
+.cell.x::before,
+.cell.x::after,
+.board.x .cell:not(.o):not(.x):hover::before,
+.board.x .cell:not(.o):not(.x):hover::after {
+  content: "";
+  width: calc(var(--markSize) * 0.14);
+  height: var(--markSize);
+  position: absolute;
+}
+
+.cell.x::before,
+.board.x .cell:not(.o):not(.x):hover::before {
+  transform: rotate(45deg);
+}
+.cell.x::after,
+.board.x .cell:not(.o):not(.x):hover::after {
+  transform: rotate(-45deg);
+}
+
+.cell.o::before,
+.cell.o::after,
+.board.o .cell:not(.o):not(.x):hover::before,
+.board.o .cell:not(.o):not(.x):hover::after {
+  content: "";
+  border-radius: 50%;
+  position: absolute;
+}
+
+.cell.o::before,
+.board.o .cell:not(.o):not(.x):hover::before {
+  width: var(--markSize);
+  height: var(--markSize);
+}
+
+.cell.o::after,
+.board.o .cell:not(.o):not(.x):hover::after {
+  width: calc(var(--markSize) * 0.7);
+  height: calc(var(--markSize) * 0.7);
+  background-color: white;
+}
+
+.board.o .cell:not(.o):not(.x):hover::before {
+  background-color: lightgray;
+}

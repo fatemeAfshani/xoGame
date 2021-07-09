@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <h1>waiting room</h1>
+    <p id="error-message"></p>
+    <div id="board-data"></div>
+    <p id="count-down"></p>
+
+    <script id="board-data-template" type="text/html">
+      <div class="board">
+        <p>my game</p>
+        <p class="board-users">user1: {{nickName}}</p>
+        <p>my creadit: {{credit}}</p>
+        <p>game gem: {{gem}}</p>
+      </div>
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qs/6.6.0/qs.min.js"></script>
+    <script src="/socket.io/socket.io.js"></script>
+    <script src="./js/waiting.js"></script>
+  </body>
+</html>

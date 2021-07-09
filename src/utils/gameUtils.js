@@ -5,8 +5,8 @@ const setJoinTimeOut = (boardId) => {
   try {
     setTimeout(async () => {
       const board = await Board.findById(boardId);
-      if (!board.user2.id) {
-        await Board.deleteOne({ id: boardId });
+      if (board && !board.user2.id) {
+        await Board.findByIdAndDelete({ _id: boardId });
       }
     }, config.joinTimeOut * 1000);
   } catch (error) {
