@@ -35,17 +35,4 @@ router.get("/me", auth, (req, res) => {
   res.send(req.user);
 });
 
-// router.get("/avatar", auth, async (req, res) => {
-//   try {
-//     if (!req.isvalidtoupdateuser.avatar) {
-//       throw new Error("not found");
-//     }
-
-//     res.set("Content_Type", "image/png");
-//     res.send(user.avatar);
-//   } catch (e) {
-//     res.status(404).send({ message: e.message, error });
-//   }
-// });
-
 module.exports = router;

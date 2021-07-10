@@ -4,20 +4,23 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./css/style.css" />
+
     <title>Document</title>
   </head>
   <body>
     <h1>waiting room</h1>
-    <p id="error-message"></p>
+    <p id="error-message" class="error-message"></p>
     <div id="board-data"></div>
-    <p id="count-down"></p>
+    <div id="count-down" class="timer"></dib>
 
     <script id="board-data-template" type="text/html">
-      <div class="board">
+      <div class="profile data">
         <p>my game</p>
-        <p class="board-users">user1: {{nickName}}</p>
+        <p>user1: {{nickName}}</p>
         <p>my creadit: {{credit}}</p>
         <p>game gem: {{gem}}</p>
+        <img src="{{avatar}}" alt="profile picture" class="image" />
       </div>
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>

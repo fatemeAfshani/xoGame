@@ -1,6 +1,22 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  -webkit-box-sizing: border-box;
+}
+
 :root {
   --size: 100px;
   --markSize: calc(100px * 0.9);
+}
+
+body {
+  font-family: Arial, sans-serif;
+  font-weight: normal;
+  font-size: 1rem;
+  color: rgb(41, 41, 41);
+  height: 100vh;
+  position: relative;
 }
 
 .board {
@@ -108,4 +124,47 @@
 
 .board.o .cell:not(.o):not(.x):hover::before {
   background-color: lightgray;
+}
+
+.error-message {
+  padding: 0.5rem;
+  margin: 1rem;
+  font-weight: bold;
+  color: rgb(155, 0, 0);
+}
+
+.data {
+  padding: 1rem;
+  margin: 1rem;
+}
+
+.profile {
+  border: 0.2rem solid rgb(55, 10, 160);
+}
+
+.image {
+  width: 200px;
+  height: 200px;
+}
+
+.list-li {
+  padding: 1rem;
+  margin: 0.5rem;
+  list-style-type: none;
+  border: 0.2rem solid rgb(55, 10, 160);
+}
+
+.form {
+  padding: 1rem;
+  border: 0.2rem solid rgb(55, 10, 160);
+  margin: 1rem;
+}
+
+.timer {
+  font-size: 3rem;
+  padding: 1rem;
+  font-weight: bold;
+}
+p {
+  margin-bottom: 0.5rem;
 }

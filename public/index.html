@@ -4,17 +4,19 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="stylesheet" href="./css/style.css" />
+
     <title>lobby</title>
   </head>
   <body>
     <h1>xo game</h1>
-    <p id="error-message"></p>
+    <div id="error-message" class="error-message"></div>
     <p id="user-data"></p>
     <div id="user-boards"></div>
 
-    <form id="new-board">
+    <form id="new-board" class="form">
       <h3>new game?</h3>
-      <p id="form-error-message"></p>
+      <p id="form-error-message" class="error-message"></p>
       <div>
         <label for="gem">how many gem you want to use?</label>
         <input type="text" name="gem" placeholder="200" required />
@@ -24,44 +26,45 @@
     <div id="open-boards"></div>
 
     <script id="user-data-template" type="text/html">
-      <div class="user">
-        <p>my profile</p>
-        <p class="user-name">{{nickName}}</p>
-        <p class="user-name">{{fullName}}</p>
+      <div class="profile data">
+        <h4>my profile</h4>
+        <p>{{nickName}}</p>
+        <p>{{fullName}}</p>
         <p>credit: {{credit}}</p>
+        <img src="{{avatar}}" alt="profile picture" class="image" />
       </div>
     </script>
 
     <script id="user-board-template" type="text/html">
-      <div class="board">
+      <div class="data">
         <p>my game history</p>
-        <ul class="users">
-          <!-- this is a specific syntax for refering an array between this two tags we say what we want to do with array items -->
+        <ul>
           {{#boards}}
-
-          <p class="board-users">user1: {{user1.nickName}}</p>
-          <p class="board-users">user2: {{user2.nickName}}</p>
-          <p>credit: {{gem}}</p>
-          <p>{{roundsNumber}} rounds</p>
-          <p>{{drawsNumber}} draws</p>
-          <p>user1 won {{user1Wins}} rounds</p>
-          <p>user2 won {{user2Wins}} rounds</p>
-          <p>winner {{winner}}</p>
+          <li class="list-li">
+            <p>user1: {{user1.nickName}}</p>
+            <p>user2: {{user2.nickName}}</p>
+            <p>credit: {{gem}}</p>
+            <p>{{roundsNumber}} rounds</p>
+            <p>{{drawsNumber}} draws</p>
+            <p>user1 won {{user1Wins}} rounds</p>
+            <p>user2 won {{user2Wins}} rounds</p>
+            <p>winner {{winner}}</p>
+          </li>
           {{/boards}}
         </ul>
       </div>
     </script>
 
     <script id="open-board-template" type="text/html">
-      <div class="board">
+      <div class="data">
         <p>open Boards</p>
-        <ul class="users" id="boards">
+        <ul id="boards">
           <!-- this is a specific syntax for refering an array between this two tags we say what we want to do with array items -->
           {{#boards}}
-          <li>
+          <li class="list-li">
             <p class="board-users">user1: {{user1.nickName}}</p>
             <p>credit: {{gem}}</p>
-            <button class="join-board" data-id="{{_id}}">enter</button>
+            <button data-id="{{_id}}" class="join-board">enter</button>
           </li>
           {{/boards}}
         </ul>

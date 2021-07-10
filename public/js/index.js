@@ -44,7 +44,6 @@ const getTokenAndSetUser = async () => {
       }
     );
 
-    console.log(user);
     localStorage.setItem("token", user.token);
     const html = Mustache.render(userDataTemplate, {
       nickName: user.nickName,
@@ -68,11 +67,12 @@ const getUserData = async (token) => {
         },
       }
     );
-    console.log(user);
+
     const html = Mustache.render(userDataTemplate, {
       nickName: user.nickName,
       fullName: user.fullName,
       credit: user.credit,
+      avatar: user.avatar,
     });
     $userData.insertAdjacentHTML("beforebegin", html);
   } catch (error) {
@@ -91,7 +91,7 @@ const getUserBoardsHistory = async () => {
         },
       }
     );
-    console.log(boards);
+
     const html = Mustache.render(userBoardTemplate, {
       boards,
     });
@@ -112,7 +112,6 @@ const getOpenBoards = async () => {
         },
       }
     );
-    console.log(boards);
     const html = Mustache.render(openBoardTemplate, {
       boards,
     });
@@ -153,7 +152,7 @@ $newBoardForm.addEventListener("submit", async (e) => {
         },
       }
     );
-    console.log(board);
+
     window.location.href = `waiting.html?id=${board._id}`;
   } catch (error) {
     $formButton.removeAttribute("disabled");
@@ -167,7 +166,7 @@ setListnerForBoards = (token) => {
     const $joinButton = board.querySelector(".join-board");
     $joinButton.addEventListener("click", async () => {
       const id = $joinButton.getAttribute("data-id");
-      console.log(id);
+
       try {
         const { data: board } = await axios.patch(
           `http://localhost:3001/api/game/join/${id}`,
@@ -178,7 +177,7 @@ setListnerForBoards = (token) => {
             },
           }
         );
-        console.log(board);
+
         window.location.href = `playground.html?id=${board._id}`;
       } catch (error) {
         showError(error, $errorMessage);

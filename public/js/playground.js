@@ -38,8 +38,6 @@ let moves = [];
 const x_Class = "x";
 const o_Class = "o";
 
-console.log(moves, turn, myData);
-
 //init socket
 const socket = io("/playground", {
   extraHeaders: {
@@ -66,9 +64,8 @@ const getUserData = async () => {
         },
       }
     );
-    console.log(user);
+
     myData = user;
-    console.log("myData", myData);
   } catch (error) {
     showError(error, $errorMessage);
   }
@@ -78,10 +75,8 @@ function sethover() {
   board.classList.remove(o_Class);
   board.classList.remove(x_Class);
   if (turn == myData.turn) {
-    console.log("in set hover my turn");
     board.classList.add(myData.turn);
   } else {
-    console.log("in set hover not my turn");
     $cells.forEach((cell) => {
       cell.removeEventListener("click", clickCell);
     });
@@ -92,7 +87,7 @@ function clickCell(e) {
   const cell = e.target;
   if (turn == myData.turn) {
     //adding mark
-    console.log("clicked a cell my turn");
+
     cell.classList.add(myData.turn);
     const data = {
       turn,
@@ -108,19 +103,15 @@ function clickCell(e) {
 const continueGame = () => {
   $gameMessage.innerHTML = "";
   $gameStatus.innerHTML = "";
-  console.log("in continue game", moves);
   $cells.forEach((cell) => {
     const index = cell.getAttribute("data-index");
     if (moves[index] == 0) {
       cell.classList.remove(o_Class);
       cell.classList.remove(x_Class);
       cell.addEventListener("click", clickCell, { once: true });
-      console.log("in continue game empty cell");
     } else if (moves[index] == x_Class) {
-      console.log("in continue game X cell");
       cell.classList.add(x_Class);
     } else {
-      console.log("in continue game O cell");
       cell.classList.add(o_Class);
     }
   });
@@ -130,7 +121,6 @@ const continueGame = () => {
 const startGame = () => {
   $gameMessage.innerHTML = "";
   $gameStatus.innerHTML = "";
-  console.log("in start game");
   $cells.forEach((cell) => {
     cell.classList.remove(o_Class);
     cell.classList.remove(x_Class);
@@ -140,21 +130,16 @@ const startGame = () => {
 };
 
 function checkStatus() {
-  console.log("in check status");
   if (turn.length == 0 || moves.length == 0) {
-    console.log("still wating to get data");
     setTimeout(checkStatus, 1000);
     return;
   } else {
-    console.log("moves, turn", moves, turn);
     const newGame = moves.every((move) => {
       return move == 0;
     });
     if (newGame) {
-      console.log("in check status before calling start game");
       startGame();
     } else {
-      console.log("in check status before calling continue game ");
       continueGame();
     }
   }
@@ -165,11 +150,10 @@ getUserData();
 checkStatus();
 
 socket.on("connect", () => {
-  console.log("im connected");
+  console.log("connected to socket");
 });
 
 socket.on("boardData", (board) => {
-  console.log(board);
   const html = Mustache.render(boardDataTemplate, {
     user1NickName: board.user1.nickName,
     user1Avatar: board.user1.avatar,
@@ -184,20 +168,16 @@ socket.on("boardData", (board) => {
   $boardData.innerHTML = html;
   if (myData._id == board.user1.id) {
     myData.turn = "x";
-    console.log("my turn", myData.turn);
   } else {
     myData.turn = "o";
-    console.log("my turn", myData.turn);
   }
 });
 
 socket.on("error", (error) => {
-  console.log(error);
   showError(error, $errorMessage);
 });
 
 socket.on("message", (msg) => {
-  console.log(msg);
   const html = Mustache.render(messageTemplate, {
     nickName: msg.nickName,
     msg: msg.text,
@@ -207,7 +187,6 @@ socket.on("message", (msg) => {
 });
 
 socket.on("messagesHistory", (messages) => {
-  console.log(messages);
   const convertedMessages = messages.map((message) => {
     return {
       createdAt: moment(message.createdAt).format("h:mm a"),
@@ -222,27 +201,21 @@ socket.on("messagesHistory", (messages) => {
 });
 
 socket.on("moves", (data) => {
-  console.log(data);
   moves = data;
 });
 
 socket.on("turn", (data) => {
-  console.log(data);
   turn = data;
-  console.log(turn, myData);
 });
 
 socket.on("changesForClients", (data) => {
-  console.log(data);
   turn = data.newTurn;
   moves = data.moves;
   continueGame();
 });
 
 const continueButtonListener = () => {
-  console.log("clicked continue game button");
   socket.emit("continue", "", (newData) => {
-    console.log(newData);
     moves = newData.moves;
     turn = newData.turn;
     const { board } = newData;
@@ -263,7 +236,6 @@ const continueButtonListener = () => {
 };
 
 socket.on("endRound", ({ board, status }) => {
-  console.log(board, status);
   const html = Mustache.render(gameStatusTemplate, {
     status,
   });
@@ -272,12 +244,10 @@ socket.on("endRound", ({ board, status }) => {
     cell.removeEventListener("click", clickCell);
   });
   document.querySelector("#finish-game").addEventListener("click", () => {
-    console.log("clicked finish game button");
     socket.emit("finish", "", (error) => {
       if (error) {
         showError(error, $errorMessage);
       } else {
-        console.log("i must go a way");
         window.location.href = "index.html";
       }
     });
@@ -289,12 +259,11 @@ socket.on("endRound", ({ board, status }) => {
 });
 
 socket.on("otherUserDecision", (data) => {
-  console.log("other user decisition", data);
   if (data.decision == "continue") {
     $gameMessage.innerHTML = "the other user decide to continue :)";
   } else if (data.decision == "end") {
     $gameMessage.innerHTML =
-      "the other user decide to finish the game, thanks for playing :)";
+      "the other user decide to finish the game, thanks for playing :), please click <a href='index.html'>here </a> to go back to lobby";
     const continueButton = document.querySelector("#continue-game");
     if (continueButton) {
       continueButton.removeEventListener("click", continueButtonListener);
@@ -305,7 +274,6 @@ socket.on("otherUserDecision", (data) => {
 $myform.addEventListener("submit", (e) => {
   e.preventDefault();
   $formError.innerHTML = "";
-  console.log("my data", myData);
   //disable form to submit again
   $formButton.setAttribute("disabled", "disabled");
 
@@ -323,7 +291,5 @@ $myform.addEventListener("submit", (e) => {
       showError(error, $formError);
       return console.log(error);
     }
-
-    console.log("message delivered");
   });
 });

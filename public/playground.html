@@ -10,12 +10,14 @@
   </head>
   <body>
     <h1>playground</h1>
-    <p id="error-message"></p>
+    <p id="error-message" class="error-message"></p>
     <div id="board-data"></div>
+    <h4>messages</h4>
     <ul id="messages"></ul>
-    <p id="game-message"></p>
-    <form id="messageForm">
-      <p></p>
+    <p id="game-message" class="error-message"></p>
+    <form id="messageForm" class="form">
+      <h3>send message</h3>
+      <p class="error-message"></p>
       <input
         type="text"
         name="msgInput"
@@ -23,7 +25,7 @@
         required
         autocomplete="off"
       />
-      <button type="submit">send message</button>
+      <button type="submit">send</button>
     </form>
     <div id="game-status"></div>
 
@@ -40,30 +42,30 @@
     </div>
 
     <script id="board-data-template" type="text/html">
-      <div class="board-data">
+      <div class="data profile">
         <p>game</p>
-        <div class="part">
+        <div class="data profile">
           <p>user1: {{user1NickName}}</p>
-          <p>user1 avatar: {{user1Avatar}}</p>
+          <img src="{{user1Avatar}}" alt="profile picture" class="image" />
         </div>
-        <div class="part">
+        <div class="data profile">
+          <p>user2: {{user2NickName}}</p>
+          <img src="{{user2Avatar}}" alt="profile picture" class="image" />
+        </div>
+        <div class="data profile">
           <p>gem {{gem}}</p>
           <p>rounds: {{rounds}}</p>
           <p>draws: {{draws}}</p>
           <p>{{user1NickName}} win count {{user1Wins}}</p>
           <p>{{user2NickName}} win count {{user2Wins}}</p>
         </div>
-        <div class="part">
-          <p>user2: {{user2NickName}}</p>
-          <p>user2 avatar: {{user2Avatar}}</p>
-        </div>
       </div>
     </script>
 
     <script id="message-template" type="text/html">
-      <li class="message">
-        <span class="message__name">{{nickName}}</span>
-        <span class="message__meta">{{createdAt}}</span>
+      <li class="list-li">
+        <span>{{nickName}}</span>
+        <span>{{createdAt}}</span>
         <p>{{msg}}</p>
       </li>
     </script>
@@ -72,17 +74,20 @@
       <!-- this is a specific syntax for refering an array between this two tags we say what we want to do with array items -->
       {{#messages}}
 
-      <li class="message">
-        <span class="message__name">{{nickName}}</span>
-        <span class="message__meta">{{createdAt}}</span>
+      <li class="list-li">
+        <span>{{nickName}}</span>
+        <span>{{createdAt}}</span>
         <p>{{text}}</p>
       </li>
       {{/messages}}
     </script>
+
     <script id="game-status-template" type="text/html">
-      <p>{{status}}</p>
-      <button id="continue-game">ادامه بازی</button>
-      <button id="finish-game">اتمام بازی</button>
+      <div class="form">
+        <p>{{status}}</p>
+        <button id="continue-game">ادامه بازی</button>
+        <button id="finish-game">اتمام بازی</button>
+      </div>
     </script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.21.1/axios.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/mustache.js/3.0.1/mustache.min.js"></script>

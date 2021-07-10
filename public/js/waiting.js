@@ -11,7 +11,6 @@ const boardDataTemplate = document.querySelector(
 const { id } = Qs.parse(location.search, {
   ignoreQueryPrefix: true,
 });
-console.log(id);
 
 const showError = (error, domElement) => {
   const errorMessage =
@@ -51,11 +50,11 @@ const getBoardAndJoinTimeOut = async (token) => {
       },
     });
     const { user, board, joinTimeOut } = data;
-    console.log(data);
     const html = Mustache.render(boardDataTemplate, {
       nickName: user.nickName,
       gem: board.gem,
       credit: user.credit,
+      avatar: user.avatar,
     });
     $boardData.innerHTML = html;
     TimeOutCounter(joinTimeOut, $countDown);

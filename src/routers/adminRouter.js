@@ -2,7 +2,7 @@ const express = require("express");
 const User = require("../models/User");
 const { auth, isAdmin } = require("../middlewares/Auth");
 const multer = require("multer");
-const sharp = require("sharp");
+const path = require("path");
 let config = require("../models/Config");
 
 const router = express.Router();
@@ -24,22 +24,9 @@ router.get("/create", async (req, res) => {
   }
 });
 
-// const avatar = multer({
-//   // dest : 'avatars',
-//   limits: {
-//     fileSize: 1000000,
-//   },
-//   fileFilter(req, file, cb) {
-//     if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
-//       return cb(new Error("please send an image"));
-//     }
-//     cb(undefined, true);
-//   },
-// });
-
 router.post("/user", auth, isAdmin, async (req, res) => {
-  const user = new User(req.body);
   try {
+    const user = new User(req.body);
     await user.save();
     await user.createtoken();
     res.status(201).send(user);
@@ -83,38 +70,43 @@ router.delete("/user/:id", auth, isAdmin, async (req, res) => {
   }
 });
 
-// router.post(
-//   "/user/avatar",
-//   auth,
-//   isAdmin,
-//   avatar.single("avatar"),
-//   async (req, res) => {
-//     console.log(req.file);
-//     //this will work if we install sharp :/
-//     const bufferedimg = await sharp(req.file.buffer)
-//       .resize({ height: 250, width: 250 })
-//       .png()
-//       .toBuffer();
+//multer config
+const storage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./public/img");
+  },
+  filename: function (req, file, cb) {
+    cb(
+      null,
+      file.fieldname + "-" + Date.now() + path.extname(file.originalname)
+    );
+  },
+});
 
-//     req.user.avatar = bufferedimg;
-//     await req.user.save();
+const upload = multer({ storage });
 
-//     res.send();
-//   },
-//   (error, req, res, next) => {
-//     res.status(400).send({ message: error.message });
-//   }
-// );
+router.post(
+  "/avatar/:id",
+  auth,
+  isAdmin,
+  upload.single("avatar"),
+  async (req, res) => {
+    try {
+      const filePath = req.file.path.replace(/\\/g, "/").split("/");
+      const imagePath = `./img/${filePath[filePath.length - 1]}`;
+      const user = await User.findById(req.params.id);
+      if (!user) {
+        return res.status(400).send({ message: "can not find user" });
+      }
+      user.avatar = imagePath;
+      await user.save();
 
-// router.delete("/user/avatar", auth, isAdmin, async (req, res) => {
-//   try {
-//     req.user.avatar = undefined;
-//     await req.user.save();
-//     res.send();
-//   } catch (error) {
-//     res.status(500).send({ message: "unable to delete avatar", error });
-//   }
-// });
+      res.send(user);
+    } catch (error) {
+      res.status(500).send({ message: "unable to upload avatar image", error });
+    }
+  }
+);
 
 router.get("/config", auth, (req, res) => {
   res.send(config);

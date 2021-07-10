@@ -9,6 +9,7 @@ const {
 } = require("../utils/socketUtils");
 const Filter = require("bad-words");
 
+//for when second user join to the board
 const subscriber = redis.createClient();
 subscriber.subscribe("server");
 
@@ -22,6 +23,7 @@ client.on("error", function (error) {
 const createSocketServer = (server) => {
   const io = socketio(server);
 
+  //sockets that connect from waiting.html
   io.of("/waiting").on("connection", (socket) => {
     console.log("client is connected to waiting");
     const boardRoom = socket.handshake.headers.board;
@@ -32,6 +34,7 @@ const createSocketServer = (server) => {
     });
   });
 
+  //sockets that connect from playground.html
   io.of("/playground").on("connection", (socket) => {
     console.log("client is connected to playground");
     const boardRoom = socket.handshake.headers.board;
@@ -74,7 +77,6 @@ const createSocketServer = (server) => {
         socket.emit("moves", moves);
       } else {
         const moves = [0, 0, 0, 0, 0, 0, 0, 0, 0];
-        console.log(JSON.stringify(moves));
         client.set(`moves-${boardRoom}`, JSON.stringify(moves));
         socket.emit("moves", moves);
       }
@@ -90,9 +92,9 @@ const createSocketServer = (server) => {
       }
     });
 
+    //new message
     socket.on("myMessage", (msg, callback) => {
       const filter = new Filter({ list: config.bannedWords });
-      console.log("message", msg);
 
       if (filter.isProfane(msg.text)) {
         return callback({ message: "be polite please!" });
@@ -115,39 +117,32 @@ const createSocketServer = (server) => {
       callback();
     });
 
+    //user moves
     socket.on("change", (data) => {
-      //add redis
-      console.log("change data", data);
       let moves = [];
       client.get(`moves-${boardRoom}`, (err, reply) => {
         moves = JSON.parse(reply);
-        console.log("befor updating moves", moves);
         moves[data.index] = data.turn;
-        console.log("after updating moves", moves);
 
-        console.log(JSON.stringify(moves));
-        //check gameStatus
         const { XWins, OWins, isDraw } = checkGameStatus(moves);
-        console.log("check game status", XWins, OWins, isDraw);
+
         const newTurn = data.turn == "x" ? "o" : "x";
+
         if (!XWins && !OWins && !isDraw) {
-          //change turn
-          console.log("status dont change");
-          console.log("new turn", newTurn);
           client.set(`turn-${boardRoom}`, newTurn);
           client.set(`moves-${boardRoom}`, JSON.stringify(moves));
           const changes = {
             moves,
             newTurn,
           };
+
           io.of("/playground").to(boardRoom).emit("changesForClients", changes);
         } else {
-          console.log("some thing changed");
           client.get(`board-${boardRoom}`, (err, reply) => {
             const board = JSON.parse(reply);
-            console.log("last board state", board);
             let status = "";
             board.roundsNumber += 1;
+
             if (XWins) {
               board.user1Wins += 1;
               status = `user 1 ${board.user1.nickName} wins`;
@@ -159,14 +154,15 @@ const createSocketServer = (server) => {
               status = "Draw";
             }
             client.set(`board-${boardRoom}`, JSON.stringify(board));
-            console.log("status, and board", status, board);
             const changes = {
               moves,
               newTurn,
             };
+
             io.of("/playground")
               .to(boardRoom)
-              .emit("chagesForClients", changes);
+              .emit("changesForClients", changes);
+
             io.of("/playground")
               .to(boardRoom)
               .emit("endRound", { board, status });
@@ -176,7 +172,6 @@ const createSocketServer = (server) => {
     });
 
     socket.on("continue", (data, cb) => {
-      console.log("on continue");
       const moves = [0, 0, 0, 0, 0, 0, 0, 0, 0];
       client.set(`moves-${boardRoom}`, JSON.stringify(moves));
       client.set(`turn-${boardRoom}`, "x");
@@ -196,9 +191,8 @@ const createSocketServer = (server) => {
     socket.on("finish", (data, cb) => {
       client.get(`board-${boardRoom}`, async (err, reply) => {
         const board = JSON.parse(reply);
-        const { error } = await finishGame(board);
-        if (error) {
-          console.log(error);
+        const data = await finishGame(board);
+        if (data.error) {
         }
       });
       cb();

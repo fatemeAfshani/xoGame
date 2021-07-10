@@ -1,10 +1,10 @@
 const express = require("express");
+const redis = require("redis");
 const Board = require("../models/Board");
 const User = require("../models/User");
 const { auth } = require("../middlewares/Auth");
 const { setJoinTimeOut } = require("../utils/gameUtils");
 let config = require("../models/Config");
-const redis = require("redis");
 
 const publisher = redis.createClient();
 
@@ -19,7 +19,6 @@ router.post("/", auth, async (req, res) => {
     ) {
       return res.status(400).send({ message: "gem number is invalid" });
     }
-
     const board = new Board({
       user1: {
         id: req.user._id,
@@ -28,7 +27,6 @@ router.post("/", auth, async (req, res) => {
       },
       gem: req.body.gem,
     });
-
     await board.save();
     setJoinTimeOut(board._id);
     res.status(201).send(board);
@@ -115,6 +113,28 @@ router.patch("/finish/:id", async (req, res) => {
     res.send(board);
   } catch (error) {
     return res.status(500).send({ message: "unable to update board", error });
+  }
+});
+
+router.patch("/user/:id", async (req, res) => {
+  if (!req.body.credit || !req.body.status) {
+    return res.status(400).send({ message: "invalid input" });
+  }
+  try {
+    const user = await User.findById(req.params.id);
+    if (!user) {
+      return res.status(400).send({ message: "can not find user" });
+    }
+    if (req.body.status == "winner") {
+      user.credit += req.body.credit;
+    } else if (req.body.status == "loser") {
+      user.credit -= req.body.credit;
+    }
+
+    await user.save();
+    res.send(user);
+  } catch (error) {
+    res.status(500).send({ message: "unable to update", error });
   }
 });
 
