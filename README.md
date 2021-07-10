@@ -1,8 +1,8 @@
 ## xoGame: online xo game
 
 ## evn variables:
-PORT
-MONGODB_URL
+PORT, 
+MONGODB_URL, 
 SECRET_JWT
 
 to start playing as user after creating users and setting configs go to LOCALHOST:PORT and create new board or join to one of open boards
@@ -30,6 +30,14 @@ Content-Type: application/json
 "validCredits" : [100, 200, 300],
 "bannedWords": ["biAdab", "bishor", "khar", "gav"]
 }
+```
+------- get configs
+
+```
+GET /api/admin/config HTTP/1.1
+Host: $URL
+Authorization: Bearer $ADMIN_TOKEN
+
 ```
 
 ------- create new user:
