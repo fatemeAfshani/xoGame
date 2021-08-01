@@ -1,8 +1,9 @@
 ## xoGame: online xo game
 
 ## evn variables:
-PORT, 
-MONGODB_URL, 
+
+PORT,
+MONGODB_URL,
 SECRET_JWT
 
 to start playing as user after creating users and setting configs go to LOCALHOST:PORT and create new board or join to one of open boards
@@ -28,9 +29,10 @@ Content-Type: application/json
 "joinTimeOut": 60,
 "moveTimeOut" : 30,
 "validCredits" : [100, 200, 300],
-"bannedWords": ["biAdab", "bishor", "khar", "gav"]
+"bannedWords": ["badword1", "badword2"]
 }
 ```
+
 ------- get configs
 
 ```
@@ -87,6 +89,7 @@ Content-Length: 23
 
 }
 ```
+
 ------ DELETE USER
 
 ```
